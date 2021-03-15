@@ -1,2 +1,8 @@
-# web-340
- Repo for class web-340
+# WEB 340 Node.js
+
+
+## Contributors
+
+
+- Alex Haefner
+- Cristy Cross
