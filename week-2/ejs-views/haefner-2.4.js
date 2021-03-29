@@ -6,8 +6,10 @@
 ; Description: Sets up a webserver, using port 8080
 ;===========================================
 */
+
 var http = require("http");
 
+//Require express and create an instance of it
 var express = require("express");
 
 var path = require("path");
@@ -32,8 +34,10 @@ app.get("/", function(req, res)
 
 });
 
+//Start server and tell it to listen on port 8080.
 http.createServer(app).listen(8080, function() {
 
+    //Display message in console that the application has started.
     console.log("EJS-Views app started on port 8080.");
 
 });
