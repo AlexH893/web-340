@@ -1,0 +1,42 @@
+<!-- 
+    Title: index.ejs
+    Author: Alex Haefner
+    Date: 3-28-2021
+    Description: This page will run on a node webserver. Simple formatting
+    to display output.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+
+    <nav class="nav navbar-dark bg-dark">
+        <a class="nav-link active" aria-current="page" href="#">Active</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </nav>
+
+      <div class="container">
+          <br>
+          <br>
+        <h4>Welcome to the EJS index page.</h4>
+
+        <div class="row">
+            <div class="col-sm-12">
+            <div class="alert alert-success" role="alert">
+                <span><%= firstName %></span>
+                <br>
+                <span><%= lastName %></span>
+                <br>
+                <span><%= address %></span>
+            </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
