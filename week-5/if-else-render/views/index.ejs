@@ -1,0 +1,25 @@
+<div role="main" class="container">
+
+    <br/><br/>
+
+    <h2>Name List</h2>
+
+    <% for (var k = 0; k < name.length; k++) { %>
+
+    <!-- if -->
+
+    <% if (names[k].length > 0) { %>
+
+    <div class="alert alert-success" role="alert"><strong><%= names[k] %></strong></div>
+
+    <% } %>
+
+    <!-- // end if -->
+
+
+
+    <% } %>
+
+    <!-- end for loop -->
+
+</div>
