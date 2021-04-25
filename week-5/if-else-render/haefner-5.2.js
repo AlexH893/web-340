@@ -1,16 +1,21 @@
+
+//adding express
 var express = require("express");
 
 var http = require("http");
 
 var path = require("path");
 
-app = express();
+//app functions
+var app = express();
 
-app.set("views", path.resolve(_dirname, "views"));
+//tells express to look inside views folder for any files
+app.set("views", path.resolve(__dirname, "views"));
 
+//use this view engine
 app.set("view engine", "ejs");
 
-var f = [
+var nameArray = [
     "alex",
     
     "brad",
@@ -20,16 +25,20 @@ var f = [
     "smith"
 ];
 
+//routes 
 app.get("/", function(request, response) {
 
+    //return list of names
     response.render("index", {
 
-        names: f
+        names: nameArray
     })
 });
 
+//creating server, passing in app object, listening on port 8080
 http.createServer(app).listen(8080, function() {
 
+    //Says the server has started
     console.log("application started on port 8080!");
 
 });
