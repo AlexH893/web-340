@@ -3,6 +3,24 @@ body {
     font-family: "Nunito", sans-serif;
 }
 
+.navbar {
+    background-color: #f5d9d5;
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
+.navbar .nav-link {
+    color: white;
+}
+
+.navbar .nav-link:hover {
+    color: #ea1c2c;
+}
+
+.navbar .navbar-brand {
+    color: #ea1c2c;
+}
+
 #headingGroup span {
     color: #ea1c2c;
 }
@@ -38,4 +56,6 @@ p.lead {
 .footer {
     text-align:center; 
     color: white;
+    font-size: 1.5rem;
+    font-weight: 100;
 }
