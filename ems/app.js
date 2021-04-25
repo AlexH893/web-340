@@ -18,7 +18,7 @@ app.get("/", function (request, response) {
 
     response.render("index", {
 
-        title: "Home page"
+        title: "Home Page"
 
     });
 
