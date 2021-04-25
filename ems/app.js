@@ -10,6 +10,9 @@ var app = express();
 
 app.set("views", path.resolve(__dirname, "views"));
 
+//Defining a new location for static files(in this case css)
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.set("view engine", "ejs");
 
 app.use(logger("short"));
