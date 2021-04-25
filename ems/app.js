@@ -27,6 +27,45 @@ app.get("/", function (request, response) {
 
 });
 
+//Routing for list page
+app.get('/list', function(req, res) {  
+    
+    res.render('list', {
+        
+        title: "List Page"
+    } 
+
+    );
+
+});
+
+//Routing for new page
+app.get('/new', function(req, res) {  
+    
+    res.render('new', {
+        
+        title: "New Page"
+    } 
+
+    );
+
+});
+
+
+//Routing for new page
+app.get('/view', function(req, res) {  
+    
+    res.render('view', {
+        
+        title: "View Page"
+    } 
+
+    );
+
+});
+
+
+
 http.createServer(app).listen(8080, function() {
 
     console.log("Application started on port 8080!");
