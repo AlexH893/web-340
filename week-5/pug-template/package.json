@@ -1,0 +1,10 @@
+{
+    "name": "hello-world",
+    "author": "Alex Haefner",
+    "private": true,
+    "dependencies": {
+        "ejs": "^3.1.6",
+        "express": "^4.17.1",
+        "pug": "^3.0.2"
+    }
+}
