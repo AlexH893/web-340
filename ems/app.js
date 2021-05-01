@@ -36,6 +36,13 @@ app.set("view engine", "ejs");
 
 app.use(logger("short"));
 
+var employee = new Employee({
+
+    fName: "Test"
+
+});
+
+
 app.get("/", function (request, response) {
 
     response.render("index", {
