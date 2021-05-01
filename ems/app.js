@@ -8,6 +8,25 @@ var logger = require("morgan");
 
 var app = express();
 
+var mongoDB = "<mLab connection string>";
+
+mongoose.connect(mongoDB, {
+
+    useMongoClient: true
+});
+
+mongoose.Promise = global.Promise;
+
+var db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "MongoDB connection error: "));
+
+
+db.once("open", function() {
+
+    console.log("Application has been connected to mLab MongoDB instance");
+});
+
 app.set("views", path.resolve(__dirname, "views"));
 
 //Defining a new location for static files(in this case css)
