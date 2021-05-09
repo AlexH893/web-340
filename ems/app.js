@@ -2,7 +2,7 @@
 ============================================
 ; Title:  app.js
 ; Author: Alex Haefner
-; Date:   5 May 2021
+; Date:   8 May 2021
 ; Description: routing, employee model
 ;===========================================
 */
@@ -14,6 +14,8 @@ var http = require("http");
 var path = require("path");
 
 var logger = require("morgan");
+
+var helmet = require('helmet');
 
 var app = express();
 
@@ -43,7 +45,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.set("view engine", "ejs");
 
+//Use statement for logger
 app.use(logger("short"));
+
+//Use statement for helmet
+app.use(helmet.xssFilter());
 
 var employee = new Employee({
 
@@ -56,7 +62,8 @@ app.get("/", function (request, response) {
 
     response.render("index", {
 
-        title: "Home Page"
+        //title: "Home Page"
+        message: "XSS Prevention Example"
 
     });
 
@@ -100,7 +107,7 @@ app.get('/view', function(req, res) {
 });
 
 
-
+//Create/start node server
 http.createServer(app).listen(8080, function() {
 
     console.log("Application started on port 8080!");
