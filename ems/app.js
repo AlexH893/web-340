@@ -17,6 +17,16 @@ var logger = require("morgan");
 
 var helmet = require('helmet');
 
+var bodyParser = require("body-parser");
+
+var cookieParser = require('cookie-parser');
+
+var csrf = require('csurf');
+
+//Setup csurf protection
+var csrfProtection = csrf({cookie:true});
+
+//Initialize express application
 var app = express();
 
 var mongoDB = "<mLab connection string>";
@@ -50,6 +60,33 @@ app.use(logger("short"));
 
 //Use statement for helmet
 app.use(helmet.xssFilter());
+
+//Use statement for bodyParser
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+//Use statement for cookie parser
+app.use(cookieParser());
+
+//Use statement for csrf
+app.use(csrfProtection);
+
+app.use(function(request, response, next) {
+
+    var token = request.csrfToken();
+
+    response.cookie('XSRF-TOKEN', token);
+
+    response.locals.csrfToken = token;
+
+    next();
+});
+
+
+
+
+
 
 var employee = new Employee({
 
@@ -92,6 +129,27 @@ app.get('/new', function(req, res) {
     );
 
 });
+
+
+app.get('/', function(req, res) {
+
+    res.render("index", {
+        message: "New fruit entry page"
+    });
+
+});
+
+
+app.post('/process', function(request, response) {
+
+    console.log(request.body.txtName);
+
+    response.redirect("/");
+    
+});
+
+
+
 
 
 //Routing for new page
