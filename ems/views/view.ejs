@@ -1,7 +1,7 @@
 <!-- 
     Title: view.ejs
     Author: Alex Haefner
-    Date: 4-21-2021
+    Date: 5-7-2021
     Description: View page - read-only page with the selected employee’s details
 -->
 <!-- Including header script, a great way to decouple HTML content -->
@@ -12,8 +12,29 @@
 
 
 
-
-
+    <div role="main" class="container" style="width: 50%;">
+        <br /><br />
+  
+        <h2>Employee Details</h2>
+        <br />
+        <div>
+          <div class="form-group">
+            <label for="txtName">Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtName"
+              readonly
+              value="<%= employees[0].name %>"
+              name="txtName"
+            />
+          </div>
+        </div>
+  
+        <br /><br />
+  
+        <a href="/">&larr; OK</a>
+      </div>
 
 
 

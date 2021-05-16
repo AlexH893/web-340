@@ -1,4 +1,9 @@
-
+<!--
+    Title: index.ejs
+    Author: Alex Haefner
+    Date: 5--2021
+    Description: Main page
+-->
 <!-- Including header script, a great way to decouple HTML content -->
 <%- include('header.ejs'); -%>
 
@@ -32,7 +37,7 @@
     </section>
     <div role="main" class = "container">
         <br><br>
-        <h2><%= message %></h2>
+        <h2><%= title %></h2>
         <form method = "post" action="/process"></form>
         <div class = "form-group">
             <div class="form-group">
@@ -47,6 +52,34 @@
         </form>
     </div>
 
+
+    <% if (employees.length) { %>
+        <h2>Employees</h2>
+        <br />
+        <a class="" href="/new">New Employee</a>
+        <br />
+        <table class="table table-hover">
+          <thead class="bg-secondary" style="color: #f5d9d5">
+          <tr>
+            <th class="text-white" >Name</th>
+            <th class="text-white">Functions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% employees.forEach(function (entry) { %>
+            <tr>
+              <td><%= entry.name %></td>
+              <td style="width: 10%; text-align: center;">
+                <a href="/view/<%= entry.name %>">
+                  <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <% }) %>
+        </table>
+      <% } else { %> No entries! <a href="/new">Add one!</a>
+      <% } %>
     <%- include('footer.ejs'); -%>
 
 </body>

@@ -1,173 +1,174 @@
-/*
-============================================
-; Title:  app.js
-; Author: Alex Haefner
-; Date:   8 May 2021
-; Description: routing, employee model
-;===========================================
-*/
 
-var express = require("express");
 
-var http = require("http");
+//Require statements
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const logger = require('morgan');
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const mongoose = require('mongoose');
+const Employee = require('./models/employee.js');
 
-var path = require("path");
+//Putting the  mongoDB connection string into a variable 
+const conn = 'mongodb+srv://admin:Piplup893@buwebdev-cluster-1.8auop.mongodb.net/test?authSource=admin&replicaSet=atlas-b5wufs-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true';
 
-var logger = require("morgan");
-
-var helmet = require('helmet');
-
-var bodyParser = require("body-parser");
-
-var cookieParser = require('cookie-parser');
-
-var csrf = require('csurf');
-
-//Setup csurf protection
-var csrfProtection = csrf({cookie:true});
-
-//Initialize express application
-var app = express();
-
-var mongoDB = "<mLab connection string>";
-
-mongoose.connect(mongoDB, {
-
-    useMongoClient: true
+/**
+ * Mongo DB con
+ */
+mongoose.connect(conn, {
+  promiseLibrary: require('bluebird'),
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+}).then(() => {
+  console.log('Connection to the database instance was successful');
+}).catch(err => {
+  console.log(`MongoDB Error: ${err.message}`);
 });
 
-mongoose.Promise = global.Promise;
 
-var db = mongoose.connection;
+//CSRF 
+let csrfProtection = csrf({ cookie: true });
 
-db.on("error", console.error.bind(console, "MongoDB connection error: "));
+//Starts express app
+let app = express();
 
+/**
+ * Configures the dependency libraries
+ */
 
-db.once("open", function() {
+//Morgan logger
+app.use(logger('short'));
 
-    console.log("Application has been connected to mLab MongoDB instance");
-});
-
-app.set("views", path.resolve(__dirname, "views"));
-
-//Defining a new location for static files(in this case css)
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.set("view engine", "ejs");
-
-//Use statement for logger
-app.use(logger("short"));
-
-//Use statement for helmet
-app.use(helmet.xssFilter());
-
-//Use statement for bodyParser
-app.use(bodyParser.urlencoded({
+//Body parser
+app.use(
+  bodyParser.urlencoded({
     extended: true
-}));
+  })
+);
 
-//Use statement for cookie parser
+// Cookie parser
 app.use(cookieParser());
 
-//Use statement for csrf
+// Helmet
+app.use(helmet.xssFilter());
+
+//CSRF protection
 app.use(csrfProtection);
 
-app.use(function(request, response, next) {
-
-    var token = request.csrfToken();
-
-    response.cookie('XSRF-TOKEN', token);
-
-    response.locals.csrfToken = token;
-
-    next();
+/**
+ * Intercepts all incoming requests and adds a CSRF token to the response
+ */
+app.use(function(req, res, next) {
+  var token = req.csrfToken();
+  res.cookie('XSRF-TOKEN', token);
+  res.locals.csrfToken = token;
+  next();
 });
 
+//Starts the view engine, sets up directory path and the port
+app.use(express.static(path.join(__dirname, 'views')));
+app.set('view engine', 'ejs');
+app.set('port', process.env.PORT || 8080);
 
-
-
-
-
-var employee = new Employee({
-
-    fName: "Test"
-
+//Routing for index page
+app.get('/', function(req, res) {
+  Employee.find({}, function(err, employees) {
+    if (err) {
+      console.log(err);
+      throw err;
+    } else {
+      console.log(employees);
+      res.render('index', {
+        title: 'EMS | Home',
+        employees: employees
+      })
+    }
+  });
 });
 
+//Routing for new page
+app.get('/new', function(req, res) {
+  res.render('new', {
+    title: 'EMS | New'
+  });
+});
 
-app.get("/", function (request, response) {
+/**
+ * Description: Processes a form submission.
+ * Type: HttpPost
+ * Request: textName
+ * Response: index.ejs
+ * URL: localhost:8080/process
+ */
+app.post('/process', function(req, res) {
+  // console.log(request.body.txtName);
+  if (!req.body.txtName) {
+    res.status(400).send('Entries must have a name');
+    return;
+  }
 
-    response.render("index", {
+  //Gt the request's form data
+  const employeeName = req.body.txtName;
+  console.log(employeeName);
 
-        //title: "Home Page"
-        message: "XSS Prevention Example"
+  //Here we are creating the emp model 
+  let employee = new Employee({
 
-    });
+    name: employeeName
 
+  });
+
+  //Saving the data 
+  employee.save(function(err) {
+    if (err) {
+      console.log(err);
+      throw err;
+    } else {
+      console.log(employeeName + ' saved successfully!');
+      res.redirect('/');
+    }
+  });
+});
+
+//Routing for the home page
+app.get('/view/:queryName', function(req, res) {
+  const queryName = req.params['queryName'];
+
+  Employee.find({'name': queryName}, function(err, employees) {
+    if (err) {
+      console.log(err);
+      throw err;
+    } else {
+      console.log(employees);
+
+      if (employees.length > 0) {
+        res.render('view', {
+          title: 'EMS | View',
+          employees: employees
+        })
+      } else {
+        res.redirect('/');
+      }
+    }
+  })
 });
 
 //Routing for list page
-app.get('/list', function(req, res) {  
-    
-    res.render('list', {
-        
-        title: "List Page"
-    } 
-
-    );
-
-});
-
-//Routing for new page
-app.get('/new', function(req, res) {  
-    
-    res.render('new', {
-        
-        title: "New Page"
-    } 
-
-    );
-
-});
-
-
-app.get('/', function(req, res) {
-
-    res.render("index", {
-        message: "New fruit entry page"
+app.get("/list", function(request, response) {
+    Employee.find({}, function(error, employees) {
+       if (error) throw error;
+       response.render("list", {
+           title: "Employee List",
+           employees: employees
+       });
     });
-
 });
 
-
-app.post('/process', function(request, response) {
-
-    console.log(request.body.txtName);
-
-    response.redirect("/");
-    
-});
-
-
-
-
-
-//Routing for new page
-app.get('/view', function(req, res) {  
-    
-    res.render('view', {
-        
-        title: "View Page"
-    } 
-
-    );
-
-});
-
-
-//Create/start node server
-http.createServer(app).listen(8080, function() {
-
-    console.log("Application started on port 8080!");
-
+//This creates the server, and then starts/listens to it on port 8080.
+http.createServer(app).listen(app.get('port'), function() {
+  console.log('Application started on port ' + app.get('port'));
 });

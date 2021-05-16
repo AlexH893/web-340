@@ -11,10 +11,10 @@
 const mongoose = require('mongoose');
 
 //Creating instance of schema using mongoose
-const Schema = mongoose.schema;
+const Schema = mongoose.Schema;
 
 //Creating employeeSchema schema with fields
-let employeeSchema = new schema ({
+let employeeSchema = new Schema ({
 
     fName: String,
     lName: String
