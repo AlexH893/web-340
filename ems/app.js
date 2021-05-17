@@ -1,4 +1,11 @@
-
+/*
+============================================
+; Title:  app.js
+; Author: Alex Haefner
+; Date:   5-11-2021
+; Description: This is the server file for the employee system
+;===========================================
+*/
 
 //Require statements
 const express = require('express');
@@ -20,11 +27,11 @@ const conn = 'mongodb+srv://admin:Piplup893@buwebdev-cluster-1.8auop.mongodb.net
  */
 mongoose.connect(conn, {
   promiseLibrary: require('bluebird'),
-  useUnifiedTopology: true,
+  useUnisiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
 }).then(() => {
-  console.log('Connection to the database instance was successful');
+  console.log('Connection to the DB was successful!');
 }).catch(err => {
   console.log(`MongoDB Error: ${err.message}`);
 });
@@ -50,10 +57,10 @@ app.use(
   })
 );
 
-// Cookie parser
+//Adding cookie parser
 app.use(cookieParser());
 
-// Helmet
+//Adding helmet
 app.use(helmet.xssFilter());
 
 //CSRF protection
@@ -97,21 +104,15 @@ app.get('/new', function(req, res) {
   });
 });
 
-/**
- * Description: Processes a form submission.
- * Type: HttpPost
- * Request: textName
- * Response: index.ejs
- * URL: localhost:8080/process
- */
+//Processing a form submission
 app.post('/process', function(req, res) {
-  // console.log(request.body.txtName);
+   console.log(request.body.txtName);
   if (!req.body.txtName) {
     res.status(400).send('Entries must have a name');
     return;
   }
 
-  //Gt the request's form data
+  //Get the request's form data
   const employeeName = req.body.txtName;
   console.log(employeeName);
 
@@ -134,7 +135,7 @@ app.post('/process', function(req, res) {
   });
 });
 
-//Routing for the home page
+//Routing for the view page
 app.get('/view/:queryName', function(req, res) {
   const queryName = req.params['queryName'];
 
